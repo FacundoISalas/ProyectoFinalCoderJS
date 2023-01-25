@@ -17,8 +17,11 @@ function limpiarBusqueda() {
 incializeLocalStorage();
 
 function renderizarListado() {
+  const filtroMaxCaps = document.getElementById('cantidadCap').value;
+  const filteredArray = seriesAñadidas.filter((e) => parseInt(e.pendientesDeVer) <= parseInt(filtroMaxCaps));
+  console.log('filteredArray', filteredArray);
   document.getElementById('listadoseries').innerHTML = '';
-  let htmltorender = '<br>';
+  let htmltorender = '<h3 class="text-center">Listado de series añadidas filtadas por cantidad de capitulos a ver</h3>';
   for (let i = 0; i < seriesAñadidas.length; i++) {
       const e = seriesAñadidas[i];
       const htmlData = `<div class="gridCard my-5">
@@ -33,6 +36,7 @@ function renderizarListado() {
         <p> Ultimo capitulo emitido: ${e.detail.last_episode_to_air ? e.detail.last_episode_to_air.episode_number : '-'} </p>
         <p>Fecha emision ultimo episodio: ${e.detail.last_air_date ? dayjs(e.detail.last_air_date).format('DD/MM/YYYY') : '-'} </p>
         <p>Fecha emision proximo episodio: ${e.detail.next_episode_to_air ? dayjs(e.detail.next_episode_to_air.air_date).format('DD/MM/YYYY') : 'Finalizado/Suspendido'} </p>
+        <p>Capitulos pendientes de ver: ${e.pendientesDeVer}</p>
         </div>
       </div>
     </div>`
@@ -55,12 +59,19 @@ async function detalleSerie(id) {
 
 async function buscarSerie() {
     const valorBusqueda = document.getElementById('paramBusqueda').value;
+    if (!valorBusqueda) {
+      alert('Debes ingresar un texto de busqueda');
+    }
     fetch(`https://api.themoviedb.org/3/search/tv?api_key=c675bcfb72f422cb8d13272f97429e98&language=es-US&page=1&query=${valorBusqueda}&include_adult=false`, optionsGet)
 	.then(res => res.json())
         .then(async data => {
           document.getElementById('contenidoBusqueda').innerHTML = '';
-            let htmltorender = '<br>';
+            let htmltorender = '<h3 class="text-center">Resultados busqueda:</h3>';
             const objData = data.results;
+            if (objData.length === 0) {
+              htmltorender = htmltorender + `<div><h4 class="text-center">No se encontraron resultados</h4></div>`;
+              document.getElementById('contenidoBusqueda').innerHTML = htmltorender;
+            }
             for (let i = 0; i < objData.length; i++) {
                 const e = objData[i];
                 const details = await detalleSerie(e.id);
@@ -68,12 +79,12 @@ async function buscarSerie() {
                 e.ultimoEpisodioVisto = null;
                 const htmlData = `<div class="gridCard my-5">
                 <div>
-                  <img src="https://image.tmdb.org/t/p/w300${e.poster_path}" alt="">
+                  <img src="https://image.tmdb.org/t/p/w300${e.poster_path}" alt="no se encontro una imagen">
                 </div>
                 <div>
                   <h3>${e.name}</h3>
                   <span id="${e.id}" style="display:none;"></span>
-                  <p>Califacion: ${e.vote_average === 0 ? 'Sin Califacion' : e.vote_average} </p>
+                  <p>Calificacion: ${e.vote_average === 0 ? 'Sin Califacion' : e.vote_average} </p>
                   <p>Cantidad de episodios: ${e.detail.number_of_episodes}</p>
                   <p> Ultimo capitulo emitido: ${e.detail.last_episode_to_air ? e.detail.last_episode_to_air.episode_number : '-'} </p>
                   <p>Fecha emision ultimo episodio: ${e.detail.last_air_date ? dayjs(e.detail.last_air_date).format('DD/MM/YYYY') : '-'} </p>
@@ -82,7 +93,7 @@ async function buscarSerie() {
                     <div class="col-lg-12 col-md-4 col-sm-12">
                       <div class="mb-3">
                         <label for="ultimoCapVisto" class="form-label"
-                          >Ultimo capitulo visto</label
+                          >Ultimo capitulo visto:</label
                         >
                         <input
                           type="number"
@@ -117,7 +128,8 @@ function AñadirSerie(param) {
     element[0].pendientesDeVer = `${parseInt(element[0].detail.number_of_episodes) - parseInt(element[0].ultimoEpisodioVisto)}`;
     seriesAñadidas.push(element[0]);
     localStorage.setItem('listadoseries', JSON.stringify(seriesAñadidas));
-    console.log('seriesAñadidasFinal', seriesAñadidas);
+    alert('serie añadida con éxito');
+    renderizarListado();
   } else {
     alert('La serie que intentas añadir ya fue añadida previamente');
   }
