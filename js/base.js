@@ -13,9 +13,16 @@ function buscarSerie() {
             console.log('datatrue', objData);
             for (let i = 0; i < objData.length; i++) {
                 const e = objData[i];
-                const htmlData = `<div class="gridCard">
-                <p>${e.name}</p>
-                </div>`
+                const htmlData = `<div class="gridCard my-5">
+                <div>
+                  <img src="https://image.tmdb.org/t/p/w300${e.poster_path}" alt="">
+                </div>
+                <div>
+                  <h3>title goes here</h3>
+                  <p>somedata</p>
+                  <p>even some more other data</p>
+                </div>
+              </div>`
                 htmltorender = htmltorender + htmlData;
                 document.getElementById('contenidoBusqueda').innerHTML = htmltorender;
             }
