@@ -7,11 +7,39 @@ function incializeLocalStorage() {
   const localdata = localStorage.getItem('listadoseries');
   if (localdata) {
     seriesAñadidas = JSON.parse(localdata);
+    renderizarListado();
   }
 };
-
+function limpiarBusqueda() {
+  document.getElementById('contenidoBusqueda').innerHTML = '';
+  resultados = [];
+};
 incializeLocalStorage();
 
+function renderizarListado() {
+  document.getElementById('listadoseries').innerHTML = '';
+  let htmltorender = '<br>';
+  for (let i = 0; i < seriesAñadidas.length; i++) {
+      const e = seriesAñadidas[i];
+      const htmlData = `<div class="gridCard my-5">
+      <div>
+        <img src="https://image.tmdb.org/t/p/w300${e.poster_path}" alt="">
+      </div>
+      <div>
+        <h3>${e.name}</h3>
+        <span id="${e.id}" style="display:none;"></span>
+        <p>Califacion: ${e.vote_average === 0 ? 'Sin Califacion' : e.vote_average} </p>
+        <p>Cantidad de episodios: ${e.detail.number_of_episodes}</p>
+        <p> Ultimo capitulo emitido: ${e.detail.last_episode_to_air ? e.detail.last_episode_to_air.episode_number : '-'} </p>
+        <p>Fecha emision ultimo episodio: ${e.detail.last_air_date ? dayjs(e.detail.last_air_date).format('DD/MM/YYYY') : '-'} </p>
+        <p>Fecha emision proximo episodio: ${e.detail.next_episode_to_air ? dayjs(e.detail.next_episode_to_air.air_date).format('DD/MM/YYYY') : 'Finalizado/Suspendido'} </p>
+        </div>
+      </div>
+    </div>`
+      htmltorender = htmltorender + htmlData;
+      document.getElementById('listadoseries').innerHTML = htmltorender;
+    };
+};
 // renderizar listado series a ver
 // ENDPOINTS API TMDB
 const optionsGet = {
@@ -86,6 +114,7 @@ function AñadirSerie(param) {
     const element = resultados.filter((e) => param === e.id);
     const getValueUltimoEpisodioVisto = document.getElementById(`ultimoCapVisto${param}`).value;
     element[0].ultimoEpisodioVisto = getValueUltimoEpisodioVisto;
+    element[0].pendientesDeVer = `${parseInt(element[0].detail.number_of_episodes) - parseInt(element[0].ultimoEpisodioVisto)}`;
     seriesAñadidas.push(element[0]);
     localStorage.setItem('listadoseries', JSON.stringify(seriesAñadidas));
     console.log('seriesAñadidasFinal', seriesAñadidas);
