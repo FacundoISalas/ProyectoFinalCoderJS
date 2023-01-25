@@ -15,21 +15,33 @@
 		/>
 	</head>
 	<body>
-		<main class="container justify-content-center">
-			<div class="row justify-content-center">
-				<div class="col-lg-8 col-sm-12">
-					<div class="mb-3">
-						<label for="cantidadCap" class="form-label"
-							>Cantidad capitulos que puedo ver por dia</label
-						>
-						<input
-							type="number"
-							class="form-control"
-							name="cantidadCap"
-							id="cantidadCap"
-						/>
+		<main class="container-fluid justify-content-center">
+			<!-- playground start  zona testeos front temporal-->
+			<!-- <div style="border:20px;">
+				<p class="text-center">playground</p>
+				<div class="row justify-content-center">
+					<div class="col-lg-4 col-md-4 col-sm-12">
+						<div class="mb-3">
+							<label for="ultimoCapVisto" class="form-label"
+								>Ultimo capitulo visto</label
+							>
+							<input
+								type="number"
+								class="form-control"
+								name="ultimoCapVisto"
+								id="ultimoCapVisto"
+							/>
+						</div>
+						<div class="col-lg-2 col-md-2 col-sm-12">
+							<button type="button" class="btn btn-primary" onclick="AñadirSerie()">Añadir</button>
+						</div>
 					</div>
-        </div>
+						
+				</div>
+
+			</div> -->
+			<!-- playground end -->
+			<div class="row justify-content-center mt-5">
 					<div class="col-lg-8 col-sm-12">
 						<div class="mb-3 d-flex flex-row">
 							<input
@@ -41,13 +53,27 @@
               <button type="button mt-2" class="btn btn-primary" onclick="buscarSerie()">Buscar</button>
 						</div>
 					</div>
+					<div class="col-lg-8 col-sm-12">
+						<div class="mb-3">
+							<label for="cantidadCap" class="form-label"
+								>Cantidad capitulos que puedo ver por dia</label
+							>
+							<input
+								type="number"
+								class="form-control"
+								name="cantidadCap"
+								id="cantidadCap"
+							/>
+						</div>
+						</div>
           <div class="col-lg-6 col-sm-12">
             <div id="contenidoBusqueda"></div>
           </div>
 				</div>
 			</div>
 		</main>
-		<!-- /script cdn bootstrap -->
+		<!-- /script cdn bootstrap y day.js -->
+		<script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
 		<script
 			src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
 			integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
