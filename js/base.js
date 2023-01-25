@@ -21,7 +21,7 @@ function renderizarListado() {
   const filteredArray = seriesAñadidas.filter((e) => parseInt(e.pendientesDeVer) <= parseInt(filtroMaxCaps));
   console.log('filteredArray', filteredArray);
   document.getElementById('listadoseries').innerHTML = '';
-  let htmltorender = '<h3 class="text-center">Listado de series añadidas filtadas por cantidad de capitulos a ver</h3>';
+  let htmltorender = '<h3 class="text-center">Listado de series añadidas filtradas por cantidad de capitulos a ver</h3>';
   for (let i = 0; i < seriesAñadidas.length; i++) {
       const e = seriesAñadidas[i];
       const htmlData = `<div class="gridCard my-5">
@@ -37,6 +37,7 @@ function renderizarListado() {
         <p>Fecha emision ultimo episodio: ${e.detail.last_air_date ? dayjs(e.detail.last_air_date).format('DD/MM/YYYY') : '-'} </p>
         <p>Fecha emision proximo episodio: ${e.detail.next_episode_to_air ? dayjs(e.detail.next_episode_to_air.air_date).format('DD/MM/YYYY') : 'Finalizado/Suspendido'} </p>
         <p>Capitulos pendientes de ver: ${e.pendientesDeVer}</p>
+        <button type="button" class="btn btn-primary" onclick="eliminarSerieDelListado(${e.id})">Eliminar</button>
         </div>
       </div>
     </div>`
@@ -128,9 +129,18 @@ function AñadirSerie(param) {
     element[0].pendientesDeVer = `${parseInt(element[0].detail.number_of_episodes) - parseInt(element[0].ultimoEpisodioVisto)}`;
     seriesAñadidas.push(element[0]);
     localStorage.setItem('listadoseries', JSON.stringify(seriesAñadidas));
-    alert('serie añadida con éxito');
+    alert(`la serie ${element[0].name} se añadio con éxito al listado`);
     renderizarListado();
   } else {
     alert('La serie que intentas añadir ya fue añadida previamente');
   }
+};
+
+function eliminarSerieDelListado(param) {
+  const arraysinserie = seriesAñadidas.filter(e => e.id !== param);
+  const paramName = seriesAñadidas.filter(e => e.id === param);
+  seriesAñadidas = arraysinserie;
+  localStorage.setItem('listadoseries', JSON.stringify(seriesAñadidas));
+  renderizarListado();
+  alert(`La serie: ${paramName[0].name} se elimino con éxito del listado`);
 };
